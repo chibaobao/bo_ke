@@ -13,6 +13,11 @@ hexo的安装和常用命令
  查看hexo官网: [帮助文档](https://hexo.io/zh-cn/docs/index.html)
  
 ## 使用
+- 创建
+   $ hexo init <folder>
+   $ cd <folder>
+   $ npm install
+
 - 本地服务器启动
    hexo server
    hexo server -p  5000   指定端口号为5000
