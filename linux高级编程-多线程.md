@@ -35,6 +35,75 @@ categories: 编程学习
 	pthread_equal(t1,t2);//判断t1,t2是不是同一个线程
 	```
 
+
+```
+#include<iostream>
+#include <pthread.h>
+#include <unistd.h>
+class A
+{
+public:
+        int m_a;
+        A() 
+        {   
+                std::cout<<"creat A"<<std::endl;
+        }   
+        ~A()
+        {   
+                std::cout<<"delete A"<<std::endl;
+        }   
+};
+A * b = new A;
+void *call_back(void *arg)
+{
+        sleep(1);
+        A * a = (A*)arg;
+        std::cout<< a->m_a<<std::endl;
+        std::cout<< b->m_a<<std::endl;
+}
+void *call_back2(void *arg)
+{
+        sleep(1);
+        int *p=(int *)arg;
+        std::cout<<"c:"<<*p<<std::endl;
+}
+int main()
+{
+        A * a = new A;
+        a->m_a = 1;
+        b->m_a = 1;
+        int c=1;
+        int pid;
+        pthread_t pthread;
+        pthread_create(&pthread, NULL, call_back, a); 
+        pthread_detach(pthread);//设置线程分离（自动回收线程）
+        pthread_create(&pthread, NULL, call_back2, &c);
+        pthread_detach(pthread);//设置线程分离（自动回收线程）
+        a->m_a = 10;
+        b->m_a = 10;
+        c=10;
+        std::cout<< a->m_a<<std::endl;
+        std::cout<< b->m_a<<std::endl;
+        std::cout<<"#########################"<<std::endl;
+        //      delete a;
+        //      delete b;
+        sleep(2);//若主函数退出，各个线程将全部结束
+        return 0;
+}
+```
+
+结果：
+```
+creat A
+creat A
+10
+10
+#########################
+c:10
+10
+10
+```
+
 ## 多线程锁
 
 - 互斥量：
